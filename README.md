@@ -24,4 +24,3 @@ Contains the CNN model deployment that integrates with Python Flask.
 #### ```pip install -r requirements.txt```
 #### ```python index.py```
 
-![image](https://user-images.githubusercontent.com/57426442/126603216-60714900-3665-4fd4-b2b0-25707ee0e9bb.png)
