@@ -1,14 +1,15 @@
-# EMNIST HAND-WRITTEN (DIGITS, LETTERS) DATASET - CNN
+# EMNIST hand-written (digits, letters) dataset - CNN
 
 # colab
 Contains the jupyter notebooks that can be used to run on Google Colab or your Local machine (with Annaconda suggested).
 
 ### > dataset
-Make sure to download the dataset from following links, then uncompress it to the dataset folder (like the following image):
+- ```Make sure to download the dataset from following links, then uncompress it to the dataset folder (like the following image):```
+
 ![](https://github.com/iceStorm/httttm2-cnn-emnist-experiment/blob/master/colab/dataset/make_sure_to_download_these_files.png)
 
-Official site: https://www.nist.gov/itl/products-and-services/emnist-dataset
-Download here (from the official site above): http://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/gzip.zip
+- Official site: ```https://www.nist.gov/itl/products-and-services/emnist-dataset```
+- Download here (from the official site above): ```http://www.itl.nist.gov/iaui/vip/cs_links/EMNIST/gzip.zip```
 
 
 # experiment-src
