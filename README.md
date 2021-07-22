@@ -24,3 +24,8 @@ Contains the CNN model deployment that integrates with Python Flask.
 #### ```pip install -r requirements.txt```
 #### ```python index.py```
 
+#
+
+> **Demo**
+> 
+> ![](https://github.com/iceStorm/httttm2-cnn-emnist-experiment/blob/master/flask.gif)
