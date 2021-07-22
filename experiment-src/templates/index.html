@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTTTTM 2 - CNN Test</title>
+
+    <!--  jQuery  -->
+    <script src="{{ url_for('static', filename='libs/jquery-3.6.0.min.js') }}"></script>
+
+    <!--  loading indicator -->
+    <script src="{{ url_for('static', filename='libs/loading-indicator/js/jquery.loadingModal.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/loading-indicator/css/jquery.loadingModal.css') }}">
+
+</head>
+<body>
+
+    {% with flash_msgs = get_flashed_messages() %}
+        {% if flash_msgs %}
+            {% for msg in flash_msgs -%}
+                <script>
+                    if (document.readyState == 'complete') {
+                        alert('{{ msg }}');
+                    }
+                    else {
+                        document.addEventListener('DOMContentLoaded', () => {
+                            alert('{{ msg }}');
+                        });
+                    }
+                </script>
+            {% endfor -%}
+        {% endif %}
+    {% endwith %}
+
+
+    <form action="" method="post" id="form">
+        {{ form.csrf_token }}
+
+        <div id="predict-section">
+            <div id="predict-section-head">
+                <img src="" id="selected-image">
+                <input type="text" readonly id="txt-predicted" placeholder="No result.">
+                <input type="submit" value="Predict"/>
+            </div>
+            <h1 id="txt-result"></h1>
+        </div>
+
+        <div id="images-container">
+            {% for img_name in images %}
+                <div class="image-item" title="{{ img_name }}">
+                    <input type="radio" name="image_id" id="{{ img_name }}" value="{{ img_name }}" required>
+                    <label for="{{ img_name }}">
+                        <img src="{{ url_for('static', filename=img_name) }}" >
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            $('input[name=image_id]').change((e) => {
+                //alert(e.target.value);
+                $('#form').submit();
+            });
+
+
+            $('#form').submit(function(e) {
+                e.preventDefault();
+                //console.log($(this).serialize());
+
+
+                $('body').loadingModal({
+                  position: 'auto',
+                  text: '',
+                  color: '#fff',
+                  opacity: '0.7',
+                  backgroundColor: 'rgb(0,0,0)',
+                  animation: 'wanderingCubes'
+                });
+
+
+                $('#txt-predicted').val('Predicting...');
+                $.post(
+                    '/predict',
+                    $(this).serialize(),
+                )
+                    .done(val => {
+                        $('#txt-predicted').val(val);
+                        $('#txt-result').html(val);
+                    })
+                    .fail(err => {
+                        alert('An error occurred, view the DevTools Console for detail.');
+                        console.error(err);
+
+                        $('#txt-predicted').val('No result.');
+                        $('#txt-result').html('');
+
+                    })
+                    .always(() => {
+                        closeModal();
+                    });
+            });
+
+
+            function closeModal() {
+                setTimeout(() => {
+                    $('body').loadingModal('hide');
+                    setTimeout(() => {
+                        $('body').loadingModal('destroy');
+                    }, 1000);
+                }, 150);
+
+            }
+        });
+    </script>
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            height: 100%;
+        }
+
+
+
+        #predict-section {
+            position: relative;
+            z-index: 99;
+
+            height: 35%;
+            width: 100%;
+
+            padding: 50px 50px;
+            background: #fcfcfc;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+
+            box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.1);
+        }
+        #predict-section-head {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        input[type='submit'] {
+            padding: 10px 20px;
+
+            background: #00d90e;
+            color: white;
+            font-weight: bolder;
+
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type='submit']:hover {
+            transition: 0.35s;
+            background: #00990a;
+        }
+        #txt-predicted {
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            outline: none;
+        }
+
+
+
+        #images-container {
+            border-top: 1px solid #eee;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+
+            gap: 35px;
+
+            height: 65%;
+            overflow: auto;
+            padding: 50px;
+        }
+
+        #images-container .image-item {
+            cursor: pointer;
+            border: 1px solid #eee;
+            transition: 0.35s;
+        }
+        #images-container .image-item:hover {
+            background: rgba(0, 0, 0, 0.75);
+        }
+        #images-container .image-item:hover img {
+            opacity: 0.5;
+        }
+        img {
+            cursor: pointer;
+            max-width:100%;
+        }
+    </style>
+
+</body>
+</html>
